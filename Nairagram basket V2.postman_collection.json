@@ -1,0 +1,666 @@
+{
+	"info": {
+		"_postman_id": "6980b2c8-85e1-4c3c-a212-9a355f22728c",
+		"name": "Nairagram basket V2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23775309",
+		"_collection_link": "https://www.postman.com/nairagrambasket/workspace/80370499-dc5e-4a53-8dc4-51a5a6aaad60/collection/23775309-6980b2c8-85e1-4c3c-a212-9a355f22728c?action=share&source=collection_link&creator=23775309"
+	},
+	"item": [
+		{
+			"name": "Get Transaction Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let body = pm.response.json();",
+							"",
+							"pm.test(\"status code is 200\", () => {",
+							"    pm.response.to.have.status(200)",
+							"",
+							"})",
+							"pm.test(\"Content\", () => {",
+							"    pm.expect(body).to.have.property(\"Content\").and.is.an(\"object\").and.to.not.be.empty",
+							"});",
+							"pm.test(\"property of content\", () => {",
+							"    pm.expect(body.Content).to.have.property(\"transaction_pin\").and.be.a(\"string\")",
+							"      pm.expect(body.Content).to.have.property(\"transaction_status\").and.be.oneOf([\"pending\", \"canceled\", \"awaiting cancelation\"])",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "irezhS/WSk8WFcWLOi3dgLeSkTTs8Khw4LBJZ8+C5dQ=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transaction_pin\":\"1234567890\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/getTransactionStatus",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"getTransactionStatus"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Balance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let body = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"status code is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Content\", function(){",
+							"    pm.expect(body).to.have.property('Content').and.be.an(\"Array\")",
+							"})",
+							"pm.test(\"Property of content\", function() {",
+							"    pm.expect(body.Content).to.have.lengthOf > 1",
+							"})",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Key pair value of content\", () => {",
+							"    pm.expect(body.Content[0]).to.have.ownPropertyDescriptor(\"currency\", \"CAD\")",
+							"    pm.expect(body.Content[0]).to.have.property(\"value\").and.be.a(\"string\")",
+							"});",
+							"",
+							"pm.environment.set(\"Jasmine\", body.Content.value);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "irezhS/WSk8WFcWLOi3dgLeSkTTs8Khw4LBJZ8+C5dQ=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "secretKey",
+							"value": "{{secret}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/getBalance",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"getBalance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Pending Request",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "pdvWv2lx+Xjw3s+S7WhzuuzZjjK+bCh/fPhfJYHbpH0=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transaction_pin\":\"USD5337248914\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/cancelRequest",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"cancelRequest"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Cash Pick Up Transaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "pdvWv2lx+Xjw3s+S7WhzuuzZjjK+bCh/fPhfJYHbpH0=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"senderfirstname\":\"mike\",\n    \"senderlastname\":\"jude\",\n    \"sendercity\":\"London\",\n    \"sendercountry\":\"US\",\n    \"senderaddress\":\"No 5 address\",\n    \"senderpostalcode\":\"178980\",\n    \"senderemail\":\"sendermail@mail.com\",\n    \"toaddress\":\"Lagos\",\n    \"security_question_id\":2,\n    \"security_answer\":\"test\",\n    \"source_of_funds\":\"salary\",\n    \"purpose_of_funds\":\"support family\",\n    \"tophone\":\"12345678\",\n    \"tofirstname\":\"mekie\",\n    \"tomiddlename\":\"anny\",\n    \"tolastname\":\"jones\",\n    \"dateofbirth\":\"1985-03-23\",\n    \"fromamount\":200,\n    \"fromcurrency\":\"USD\",\n    \"transaction_number\":\"3833837383837\",\n    \"sendfromstate\":1,\n    \"fees\":0,\n    \"exchangerate\":1.3,\n    \"toemail\":\"jola@mail.com\",\n    \"tocurrency\":\"USD\",\n    \"senderphone\":\"2726272726\",\n    \"tocountry\":\"NG\",\n    \"cashpickuplocation\":\"002\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/submitCashpickupTransaction",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"submitCashpickupTransaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Mobile Wallet Transaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "pdvWv2lx+Xjw3s+S7WhzuuzZjjK+bCh/fPhfJYHbpH0=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"senderfirstname\":\"mike\",\n    \"senderlastname\":\"jude\",\n    \"senderemail\":\"sendermail@mail.com\",\n    \"senderphone\":\"7654533231\",\n    \"sendercountry\":\"US\",\n    \"senderaddress\":\"No 5 address\",\n    \"sendercity\":\"Dallas\",\n    \"sendfromstate\":\"TX\",\n    \"senderpostalcode\":\"178980\",\n    \"dateofbirth\":\"1985-03-23\",\n    \"tofirstname\":\"mekie\",\n    \"tolastname\":\"jones\",\n    \"tocountry\":\"NG\",\n    \"tophone\":\"7086543211\",\n    \"wallet\":\"MTN\",\n    \"fromamount\":300,\n    \"exchangerate\":454,\n    \"fees\":10,\n    \"transaction_number\":\"022111712000060271276\",\n    \"fromcurrency\":\"USD\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/submitWalletTransaction",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"submitWalletTransaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submitting a Transfer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "irezhS/WSk8WFcWLOi3dgLeSkTTs8Khw4LBJZ8+C5dQ=",
+						"type": "text"
+					},
+					{
+						"key": "x-mock-response-name",
+						"value": "Submitting a Transfer again",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"senderfirstname\":\"Oluwatayo\",\n    \"senderlastname\":\"Hassan\",\n    \"sendercity\":\"Chandigarh\",\n    \"sendercountry\":\"US\",\n    \"senderaddress\":\"Chandigarh India\",\n    \"senderpostalcode\":12345,\n    \"senderemail\":\"Constain@yahoo.com\",\n    \"toaddress\":\"Accra\",\n    \"tobankcode\":044,\n    \"tobankname\":\"Access Bank\",\n    \"source_of_funds\":\"Salary\",\n    \"purpose_of_funds\":\"spouse\",\n    \"tophone\":\"9876543210\",\n    \"tofirstname\":\"Idris\",\n    \"tolastname\":\"Ibrahim\",\n    \"dateofbirth\":\"1986-12-29\",\n    \"fromamount\":5,\n    \"fromcurrency\":\"USD\",\n    \"transaction_number\":\"7127121664524789\",\n    \"sendfromstate\":1,\n    \"fees\":5,\n    \"exchangerate\":508,\n    \"toemail\":\"red@blue.com\",\n    \"tocurrency\":\"USD\",\n    \"senderphone\":\"1234567890\",\n    \"tocountry\":\"NG\",\n    \"tobankaccountname\":\"Desmond tutu\",\n    \"tobankaccountnumber\":\"2345567345\",\n    \"tomiddlename\":\"Samuel\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/submitTransaction",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"submitTransaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cash Pick-up locations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "pdvWv2lx+Xjw3s+S7WhzuuzZjjK+bCh/fPhfJYHbpH0=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"country\": \"NG\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/getCashPickupLocation",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"getCashPickupLocation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Wallet by Country",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "pdvWv2lx+Xjw3s+S7WhzuuzZjjK+bCh/fPhfJYHbpH0=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"country\":\"GH\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/getPayoutWallet",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"getPayoutWallet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Beneficiary Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let body =JSON.parse(responseBody);",
+							"",
+							"pm.test (\"response time\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.above(300)",
+							"})",
+							"pm.test(\"content of body\", function () {",
+							"    pm.expect(body).to.have.haveOwnPropertyDescriptor(\"Message\", \"Account not found\")",
+							"      pm.expect(body).to.have.haveOwnPropertyDescriptor(\"Content\", \"Account not found\")",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "irezhS/WSk8WFcWLOi3dgLeSkTTs8Khw4LBJZ8+C5dQ=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"account_number\":\"0034080036\",\n    \"bank_code\":\"044\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/getBeneficiaryName",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"getBeneficiaryName"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Bank List",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "pdvWv2lx+Xjw3s+S7WhzuuzZjjK+bCh/fPhfJYHbpH0=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"country\":\"NG\",\n    \"page\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/getBankList",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"getBankList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Security Questions",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "pdvWv2lx+Xjw3s+S7WhzuuzZjjK+bCh/fPhfJYHbpH0=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "secretKey",
+							"value": "{{secret}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/getSecurityQuestions",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"getSecurityQuestions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Country list",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "secretKey",
+							"value": "{{secret}}",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/getCountryList",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"getCountryList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Currency rate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "secretKey",
+						"value": "HZIZyRy1DtKEYsqE7w7C",
+						"type": "text"
+					},
+					{
+						"key": "apiKey",
+						"value": "pdvWv2lx+Xjw3s+S7WhzuuzZjjK+bCh/fPhfJYHbpH0=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"source_currency\":\"US\",\n    \"destination_currency\":\"NG\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/v2/getCurrencyRate",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v2",
+						"getCurrencyRate"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "secret",
+			"value": "HZIZyRy1DtKEYsqE7w7C",
+			"type": "default"
+		},
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "default"
+		},
+		{
+			"key": "username",
+			"value": "imo@mynairagram.com",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "imo1234",
+			"type": "string"
+		}
+	]
+}
