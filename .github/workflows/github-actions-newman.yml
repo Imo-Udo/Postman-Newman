@@ -1,0 +1,11 @@
+name: GitHub Actions Newman
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+   
+      - name: Run API tests
+         run: newman run Nairagram basket V2.postman_collection.json -e Basket API V2.postman_environment.json"
